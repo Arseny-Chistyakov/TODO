@@ -1,3 +1,5 @@
+from itertools import chain
+
 from django.contrib import admin
 
 from TODO.models import TODO, Project
@@ -5,20 +7,21 @@ from TODO.models import TODO, Project
 
 @admin.register(TODO)
 class TODOAdmin(admin.ModelAdmin):
-    list_display = ('body', 'user', 'project', 'created', 'modified', 'is_active',)
-    list_filter = ('user', 'is_active',)
-    fields = ('body', 'user', 'project', 'created', 'modified', 'is_active',)
+    list_display = ('body', 'creator', 'project', 'created', 'modified', 'is_active',)
+    list_filter = ('creator', 'is_active',)
+    fields = ('body', 'creator', 'project', 'created', 'modified', 'is_active',)
     readonly_fields = ('created', 'modified',)
     ordering = ('-created',)
-    # search_fields = ('user', 'project', 'created', 'is_active')
-    # TODO: manytomany dont support search
+    search_fields = ('creator__username', 'project__name', 'created', 'is_active')
 
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ('name', 'url',)
-    list_filter = ('users',)
-    fields = ('name', 'url', 'users',)
-    ordering = ('-users',)
-    # search_fields = ('users',)
-    # TODO: manytomany dont support search
+    def creator_names(self, obj):
+        a = obj.users.values_list('username')
+        return list(chain.from_iterable(a))
+
+    list_display = ('name', 'repository', 'creator_names')
+    readonly_fields = ('uid',)
+    fields = ('name', 'repository', 'users',)
+    search_fields = ('name', 'users__username',)
