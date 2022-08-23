@@ -30,6 +30,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'corsheaders',
+    'django_filters',
     'users',
     'TODO',
 ]
@@ -138,4 +139,14 @@ REST_FRAMEWORK = {
         'rest_framework_xml.parsers.XMLParser',
         # 'rest_framework_JSON.parsers.JSONParser',
     ],
+
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.PageNumberPagination',
+    # 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+
 }
