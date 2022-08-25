@@ -26,7 +26,7 @@ class UserTODOModelSerializer(HyperlinkedModelSerializer):
 class UserProjectModelSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email',)
+        fields = ('username',)
 
     """
     The serializer is designed for output custom fields on display for TODOs -> project
@@ -36,7 +36,7 @@ class UserProjectModelSerializer(HyperlinkedModelSerializer):
 class UsersProjectModelSerializer(HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'email', 'last_name', 'first_name',)
+        fields = ('username', 'email',)
 
     """
     The serializer is designed for output custom fields on display for Project -> creators_project
