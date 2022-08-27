@@ -15,14 +15,17 @@ const UserItem = ({user}) => {
 
 const UserList = ({users}) => {
     return (
-        <table>
-            <th>username</th>
-            <th>first_name</th>
-            <th>last_name</th>
-            <th>email</th>
-            <th>created</th>
-            <th>modified</th>
+        <table className="table">
+            <tr>
+                <th>Username</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Email</th>
+                <th>Created</th>
+                <th>Modified</th>
+            </tr>
             {users.map((user) => <UserItem user={user}/>)}
+            {/*{Array.isArray(users) ? users.map((user) => <UserItem user={user}/>) : null}*/}
         </table>
     )
 }
