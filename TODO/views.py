@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from .filters import TODOFilter
 from .models import TODO, Project
-from .serializers import ProjectModelSerializer, TODOFilteringByProjectSerializer
+from .serializers import ProjectModelSerializer, TODOModelSerializer
 
 
 class ProjectPagination(PageNumberPagination):
@@ -36,7 +36,7 @@ class TODOPagination(PageNumberPagination):
 
 class TODOModelViewSet(ModelViewSet):
     queryset = TODO.objects.all()
-    serializer_class = TODOFilteringByProjectSerializer
+    serializer_class = TODOModelSerializer
     pagination_class = TODOPagination
     filterset_class = TODOFilter
 

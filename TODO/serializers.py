@@ -1,52 +1,32 @@
-from rest_framework.serializers import HyperlinkedModelSerializer
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 
-from users.serializers import UserTODOModelSerializer, UsersProjectModelSerializer
 from .models import TODO, Project
 
 
-class ProjectModelSerializer(HyperlinkedModelSerializer):
-    creators_project = UsersProjectModelSerializer(many=True, style={'base_template': 'input.html'})
+class ProjectModelSerializer(ModelSerializer):
+    creators_project = serializers.SlugRelatedField(slug_field='username', read_only=True, many=True)
+
+    # creators_project = serializers.HyperlinkedRelatedField(view_name='users-detail', many=True,
+    #                                                        queryset=User.objects.all())
 
     class Meta:
         model = Project
-        fields = ('name', 'repository', 'creators_project',)
+        fields = ('uid', 'name', 'repository', 'creators_project',)
 
     """
     The serializer is designed for output all fields on display of Project
     """
 
 
-class ProjectNameSerializer(HyperlinkedModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('name',)
-
-    """
-    The serializer is designed for output name_fields on display of Project
-    """
-
-
-class TODOModelSerializer(HyperlinkedModelSerializer):
-    project = ProjectModelSerializer()
-    creator_keep = UserTODOModelSerializer()
+class TODOModelSerializer(ModelSerializer):
+    creator_keep = serializers.SlugRelatedField(slug_field='username', read_only=True)
+    project = serializers.SlugRelatedField(slug_field='name', read_only=True)
 
     class Meta:
         model = TODO
-        fields = ('creator_keep', 'body', 'project', 'created', 'modified', 'is_active',)
+        fields = ('uid', 'creator_keep', 'body', 'project', 'created', 'modified', 'is_active',)
 
     """
     The serializer is designed for output all fields on display of TODO
-    """
-
-
-class TODOFilteringByProjectSerializer(HyperlinkedModelSerializer):
-    project = ProjectNameSerializer()
-    creator_keep = UserTODOModelSerializer(read_only=True)
-
-    class Meta:
-        model = TODO
-        fields = ('creator_keep', 'body', 'project', 'is_active',)
-
-    """
-    The serializer is designed for output custom fields when filtering on display of TODO
     """
