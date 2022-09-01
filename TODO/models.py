@@ -12,7 +12,7 @@ class Project(models.Model):
     creators_project = models.ManyToManyField(User, verbose_name='Пользователи, работающие над проектом')
 
     def __str__(self):
-        return f'{self.name}'
+        return f'Project: {self.name}'
 
 
 class TODO(models.Model):
@@ -25,4 +25,4 @@ class TODO(models.Model):
     is_active = models.BooleanField(default=True, verbose_name='Статус')
 
     def __str__(self):
-        return f'Can you make changes in keep'
+        return f'Project: {self.project} --- creator_keep: {self.creator_keep}'
