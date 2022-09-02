@@ -1,14 +1,9 @@
 from rest_framework import mixins
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from rest_framework.viewsets import GenericViewSet
 
 from .models import User
 from .serializers import UserModelSerializer
-
-
-class UserModelViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserModelSerializer
 
 
 class UserPagination(PageNumberPagination):
@@ -23,3 +18,7 @@ class CustomUserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins
     """
     The ViewSet is designed for view the list and each user individually, can make changes
     """
+
+# class UserModelViewSet(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserModelSerializer
