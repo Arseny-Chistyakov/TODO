@@ -9,7 +9,7 @@ const TODOItem = ({TODO}) => {
             <td>{TODO.project}</td>
             <td>{TODO.created}</td>
             <td>{TODO.modified}</td>
-            <td>{TODO.isActive ? 'Active' : 'CLose'}</td>
+            <td>{TODO.isActive ? 'Активна' : 'Закрыта'}</td>
         </tr>
     )
 }
@@ -19,12 +19,12 @@ const TODOList = ({TODOs}) => {
         <table className="table container-md mt-5">
             <thead>
             <tr>
-                <th>Text</th>
-                <th>Creator keep</th>
-                <th>Project</th>
-                <th>Created</th>
-                <th>Modified</th>
-                <th>Active</th>
+                <th>Текст заметки</th>
+                <th>Создатель заметки</th>
+                <th>Проект</th>
+                <th>Создана</th>
+                <th>Изменена</th>
+                <th>Статус</th>
             </tr>
             </thead>
             <tbody>

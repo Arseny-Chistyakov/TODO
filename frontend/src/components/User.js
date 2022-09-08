@@ -18,12 +18,12 @@ const UserList = ({users}) => {
         <table className="table container-md mt-5">
             <thead>
             <tr>
-                <th>Username</th>
-                <th>First name</th>
-                <th>Last name</th>
+                <th>Логин</th>
+                <th>Имя</th>
+                <th>Фамилия</th>
                 <th>Email</th>
-                <th>Created</th>
-                <th>Modified</th>
+                <th>Создан</th>
+                <th>Изменен</th>
             </tr>
             </thead>
             <tbody>

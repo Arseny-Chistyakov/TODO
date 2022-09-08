@@ -4,7 +4,7 @@ import {Link, useParams} from "react-router-dom";
 const ProjectItem = ({project}) => {
     return (
         <tr>
-            <td><Link to={`${project.uid}`}>{project.name}</Link></td>
+            <td><Link to={`${project.uid}`} className={"text-decoration-none text-dark "}>{project.name}</Link></td>
             <td>{project.repository}</td>
             <td>{project.creatorsProject}</td>
         </tr>
@@ -16,9 +16,9 @@ const ProjectList = ({projects}) => {
         <table className="table container-md mt-5">
             <thead>
             <tr>
-                <th>Name</th>
-                <th>Repository</th>
-                <th>Creators project</th>
+                <th>Название проекта</th>
+                <th>Репозитории</th>
+                <th>Создатели проекта</th>
             </tr>
             </thead>
             <tbody>
@@ -34,13 +34,15 @@ const ProjectDetail = ({projects}) => {
     let filteredProject = projects.filter((project) => project.uid === detailedProjectId.id)[0]
 
     return (
-        <div className="card">
+        <div className="container">
             <div className="card-body">
-                <h5 className='card-title'>Project name: {filteredProject.name}</h5>
-                <p className="card-text">URL: {filteredProject.repository}</p>
+                <h5 className=''>Название проекта: {filteredProject.name}</h5>
+                <p className="card-text">Ссылка на проект: <a
+                    href={filteredProject.repository}> {filteredProject.repository}</a>
+                </p>
                 {filteredProject.creatorsProject.map((creatorsProject, index) => {
                     return (
-                        <p> Creator {index + 1}. {creatorsProject} </p>)
+                        <p>Создатель {index + 1}. {creatorsProject} </p>)
                 })}
             </div>
         </div>
