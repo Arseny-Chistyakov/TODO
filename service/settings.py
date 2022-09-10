@@ -85,6 +85,13 @@ if SERVER:
             'PASSWORD': os.getenv('PASSWORD'),
             'HOST': os.getenv('HOST'),
             'PORT': os.getenv('PORT'),
+            'TEST': {
+                'NAME': os.getenv('TEST_NAME'),
+                'USER': os.getenv('USER'),
+                'PASSWORD': os.getenv('PASSWORD'),
+                'HOST': os.getenv('HOST'),
+                'PORT': os.getenv('PORT'),
+            },
         }
     }
 else:
@@ -126,14 +133,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
-        # 'rest_framework.renderers.JSONRenderer',
-        # 'rest_framework.renderers.BrowsableAPIRenderer',
 
     ],
 
@@ -142,12 +146,11 @@ REST_FRAMEWORK = {
         'djangorestframework_camel_case.parser.CamelCaseMultiPartParser',
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
         'rest_framework_xml.parsers.XMLParser',
-        # 'rest_framework_JSON.parsers.JSONParser',
     ],
 
     'DEFAULT_PAGINATION_CLASS':
         'rest_framework.pagination.PageNumberPagination',
-    # 'rest_framework.pagination.LimitOffsetPagination',
+
     'PAGE_SIZE': 100,
 
     'DEFAULT_FILTER_BACKENDS': [

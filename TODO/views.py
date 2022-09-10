@@ -13,12 +13,12 @@ class ProjectPagination(PageNumberPagination):
 
 
 class ProjectModelViewSet(ModelViewSet):
-    queryset = Project.objects.all()
+    queryset = Project.objects.all().order_by('uid')
     serializer_class = ProjectModelSerializer
     pagination_class = ProjectPagination
 
     def get_queryset(self):
-        queryset = Project.objects.all()
+        queryset = Project.objects.all().order_by('uid')
         name = self.request.query_params.get('name', '')
         if name:
             queryset = queryset.filter(name__contains=name)
@@ -35,7 +35,7 @@ class TODOPagination(PageNumberPagination):
 
 
 class TODOModelViewSet(ModelViewSet):
-    queryset = TODO.objects.all()
+    queryset = TODO.objects.all().order_by('uid')
     serializer_class = TODOModelSerializer
     pagination_class = TODOPagination
     filterset_class = TODOFilter

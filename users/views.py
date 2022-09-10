@@ -11,7 +11,7 @@ class UserPagination(PageNumberPagination):
 
 
 class CustomUserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, GenericViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by('uid')
     serializer_class = UserModelSerializer
     pagination_class = UserPagination
 
