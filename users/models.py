@@ -12,6 +12,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True, verbose_name='Почта')
     created = models.DateTimeField(auto_now_add=True, null=True, blank=True, editable=False, verbose_name='Создан')
     modified = models.DateTimeField(auto_now=True, null=True, blank=True, verbose_name='Изменен')
+    is_active = models.BooleanField(default=True, verbose_name='Активный')
+    is_staff = models.BooleanField(default=False, verbose_name='Персонал')
+    is_superuser = models.BooleanField(default=False, verbose_name='Администратор')
 
     def __str__(self):
         return f'{self.username}'

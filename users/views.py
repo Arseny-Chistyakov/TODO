@@ -3,7 +3,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import GenericViewSet
 
 from .models import User
-from .serializers import UserModelSerializer
+from .serializers import UserModelSerializer, UserPermissionSerializer
 
 
 class UserPagination(PageNumberPagination):
@@ -12,13 +12,14 @@ class UserPagination(PageNumberPagination):
 
 class CustomUserViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, mixins.UpdateModelMixin, GenericViewSet):
     queryset = User.objects.all().order_by('uid')
-    serializer_class = UserModelSerializer
     pagination_class = UserPagination
+    serializer_class = UserModelSerializer
+
+    def get_serializer_class(self):
+        if self.request.version == 'test_permission':
+            return UserPermissionSerializer
+        return UserModelSerializer
 
     """
-    The ViewSet is designed for view the list and each user individually, can make changes
+    The ViewSet is supported methods: List,Retrieve,Update
     """
-
-# class UserModelViewSet(ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserModelSerializer
