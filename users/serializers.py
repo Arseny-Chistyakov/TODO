@@ -12,9 +12,3 @@ class UserModelSerializer(ModelSerializer):
     """
     The serializer is designed for output all fields on display of User
     """
-
-
-class UserPermissionSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('uid', 'username', 'is_staff', 'is_superuser')
