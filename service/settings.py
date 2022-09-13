@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'django_filters',
     'drf_yasg',
+    'graphene_django',
 
     'users',
     'TODO',
@@ -134,12 +135,15 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+GRAPHENE = {
+    'SCHEMA': 'service.schema.schema'
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
         'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
         'rest_framework_xml.renderers.XMLRenderer',
-
     ],
 
     'DEFAULT_PARSER_CLASSES': [
@@ -149,20 +153,14 @@ REST_FRAMEWORK = {
         'rest_framework_xml.parsers.XMLParser',
     ],
 
-    'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.PageNumberPagination',
-
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 100,
 
-    'DEFAULT_FILTER_BACKENDS': [
-        'django_filters.rest_framework.DjangoFilterBackend'
-    ],
+    'DEFAULT_FILTER_BACKENDS': 'django_filters.rest_framework.DjangoFilterBackend',
 
-    'DATETIME_FORMAT': "%d.%m.%Y %H:%M:%S",
+    'DATETIME_FORMAT': '%d.%m.%Y %H:%M:%S',
 
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissions',
-    ],
+    'DEFAULT_PERMISSION_CLASSES': 'rest_framework.permissions.DjangoModelPermissions',
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
