@@ -18,8 +18,7 @@ class TestProjectModelViewSet(TestCase):
         self.format = 'json'
         self.user = User.objects.create_user(username='riva', password='bhj5', email='12@mail.ru')
         self.admin = User.objects.create_superuser(username='admin', email='2@mail.ru', password='admin_woof')
-        self.project_dict = {'name': 'm', 'repository': 'https://g.ru', 'creators_project': {self.user.username}}
-        # т.к.поле сериализуется SlugRelatedField,без него было бы - {self.user.uid}
+        self.project_dict = {'name': 'm', 'repository': 'https://g.ru', 'creators_project': {self.user.uid}}
         self.project = Project.objects.create(name='test_project', repository='https://g.ru')
         self.project.save()
         self.project.creators_project.set([self.user])
@@ -41,6 +40,10 @@ class TestProjectModelViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
+    def test_APIClient_create_not_auth(self):
+        response = self.client.post(self.url, self.project_dict, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_APIClient_create_admin(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.post(self.url, self.project_dict, format='json')
@@ -57,12 +60,26 @@ class TestProjectModelViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.client.logout()
 
+    def test_APIClient_update_not_auth(self):
+        response = self.client.put(f'{self.url}{self.project.uid}/', {'name': 'edited'})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_APIClient_update_admin(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.put(f'{self.url}{self.project.uid}/', {'name': 'edited'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.project.refresh_from_db()
         self.assertEqual(self.project.name, 'edited')
+        self.client.logout()
+
+    def test_APIClient_delete_not_auth(self):
+        response = self.client.delete(f'{self.url}{self.project.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_APIClient_delete_admin(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.delete(f'{self.url}{self.project.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.client.logout()
 
 
@@ -76,7 +93,7 @@ class TestTodoViewSet(APITestCase):
         self.project = Project.objects.create(name='test_project', repository='https://g.ru')
         self.project.save()
         self.project.creators_project.set([self.user])
-        self.TODO_dict = {'body': 'test_content', 'creator_keep': {self.user.username}, 'project': {self.project.name}}
+        self.TODO_dict = {'body': 'test_content', 'creator_keep': {self.user.uid}, 'project': {self.project.uid}}
         self.TODO = TODO.objects.create(body='fix', project=self.project, creator_keep=self.user,
                                         project_id=self.project.uid, creator_keep_id=self.user.uid)
 
@@ -100,14 +117,42 @@ class TestTodoViewSet(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.client.logout()
 
+    def test_APIClient_detail_not_auth(self):
+        response = self.client.get(f'{self.url}{self.TODO.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_APIClient_detail_admin(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.get(f'{self.url}{self.TODO.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.client.logout()
+
+    def test_APIClient_update_not_auth(self):
+        response = self.client.put(f'{self.url}{self.TODO.uid}/', {
+            'body': 'test_content_changed',
+            'project': self.TODO.project.uid,
+            'creator_keep': self.TODO.creator_keep.uid,
+        })
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
     def test_APIClient_update_admin(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.put(f'{self.url}{self.TODO.uid}/', {
             'body': 'test_content_changed',
-            'project': self.TODO.project.name,
-            'creator_keep': self.TODO.creator_keep.username,
+            'project': self.TODO.project.uid,
+            'creator_keep': self.TODO.creator_keep.uid,
         })
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.TODO.refresh_from_db()
         self.assertEqual(json.loads(response.content)['body'], 'test_content_changed')
+        self.client.logout()
+
+    def test_APIClient_delete_not_auth(self):
+        response = self.client.delete(f'{self.url}{self.TODO.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_APIClient_delete_admin(self):
+        self.client.force_authenticate(user=self.admin)
+        response = self.client.delete(f'{self.url}{self.TODO.uid}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.client.logout()
