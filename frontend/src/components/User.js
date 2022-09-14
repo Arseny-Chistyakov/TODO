@@ -15,21 +15,23 @@ const UserItem = ({user}) => {
 
 const UserList = ({users}) => {
     return (
-        <table className="table container-md mt-5">
-            <thead>
-            <tr>
-                <th>Логин</th>
-                <th>Имя</th>
-                <th>Фамилия</th>
-                <th>Email</th>
-                <th>Создан</th>
-                <th>Изменен</th>
-            </tr>
-            </thead>
-            <tbody>
-            {Array.isArray(users) ? users.map((user) => <UserItem user={user} key={user.uid}/>) : null}
-            </tbody>
-        </table>
+        <div className="container">
+            <table className="table table-hover mt-3">
+                <thead>
+                <tr>
+                    <th>Логин</th>
+                    <th>Имя</th>
+                    <th>Фамилия</th>
+                    <th>Email</th>
+                    <th>Создан</th>
+                    <th>Изменен</th>
+                </tr>
+                </thead>
+                <tbody>
+                {Array.isArray(users) ? users.map((user) => <UserItem user={user} key={user.uid}/>) : null}
+                </tbody>
+            </table>
+        </div>
     )
 }
 

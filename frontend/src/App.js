@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 
 import './bootstrap-css/bootstrap-css.min.css'
 import './bootstrap-css/sticky-footer-navbar.css'
@@ -10,20 +10,14 @@ import {ProjectDetail, ProjectList} from './components/Project.js'
 import TODOList from "./components/TODO";
 import Footer from "./components/Footer";
 import Navbar from "./components/Menu";
+import NotFound404 from "./components/NotFound404";
 import LoginForm from "./components/Auth";
+import ProjectForm from "./components/ProjectForm";
+import TODOForm from "./components/TODOForm";
 
 
 const DOMAIN = 'http://127.0.0.1:8000/api/'
 const get_url = (url) => `${DOMAIN}${url}`
-
-function NotFound404() {
-    let pageLocation = useLocation()
-    return (
-        <div className='container'>
-            <h1 className='mt-4 text-lg-center'>Страница по адресу '{pageLocation.pathname}' не найдена</h1>
-        </div>
-    )
-}
 
 class App extends React.Component {
     constructor(props) {
@@ -39,6 +33,59 @@ class App extends React.Component {
             TODOs: [],
             auth: {username: '', is_login: false}
         }
+    }
+
+    create_project(name, creatorsProject, repository) {
+        let headers = this.get_headers()
+        const data = {name: name, creatorsProject: creatorsProject, repository: repository}
+        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers}).then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({projects: []})
+        })
+    }
+
+    create_TODO(body, creatorKeep, project) {
+        const headers = this.get_headers()
+        const data = {body: body, creatorKeep: creatorKeep, project: project}
+        axios.post(`http://127.0.0.1:8000/api/TODOs/`, data, {headers}).then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({TODOs: []})
+        })
+    }
+
+    delete_project(uid) {
+        let headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/projects/${uid}`, {headers}).then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({projects: []})
+        })
+    }
+
+    delete_TODO(uid) {
+        let headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/TODOs/${uid}`, {headers}).then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({TODOs: []})
+        })
+    }
+
+    get_headers() {
+        let headers = {
+            'Content-Type': 'application/json'
+        }
+        if (this.state.auth.is_login) {
+            const token = localStorage.getItem('access')
+            headers['Authorization'] = 'Bearer ' + token
+        }
+        return headers
     }
 
     login(username, password) {
@@ -61,7 +108,6 @@ class App extends React.Component {
         })
     }
 
-
     logout() {
         localStorage.setItem('login', '')
         localStorage.setItem('access', '')
@@ -69,19 +115,11 @@ class App extends React.Component {
         this.setState({'auth': {username: '', is_login: false}})
     }
 
-
     load_data() {
-        let headers = {
-            'Content-Type': 'application/json'
-        }
-        if (this.state.auth.is_login) {
-            const token = localStorage.getItem('access')
-            headers['Authorization'] = 'Bearer ' + token
-        }
+        let headers = this.get_headers()
         axios.get(get_url('users/'), {headers})
             .then(response => {
                 this.setState({users: response.data.results})
-                console.log(response.data)
             }).catch(error =>
             console.log(error)
         )
@@ -93,7 +131,6 @@ class App extends React.Component {
 
         axios.get(get_url('TODOs/'), {headers})
             .then(response => {
-                console.log(response.data)
                 this.setState({TODOs: response.data.results})
             }).catch(error =>
             console.log(error)
@@ -121,9 +158,17 @@ class App extends React.Component {
                                 login={(username, password) => this.login(username, password)}/>}/>
                             <Route exact path='/' element={<UserList users={this.state.users}/>}/>
                             <Route exact path='/users' element={<UserList users={this.state.users}/>}/>
-                            <Route exact path='/TODOs' element={<TODOList TODOs={this.state.TODOs}/>}/>
-                            <Route path='/projects' element={<ProjectList projects={this.state.projects}/>}/>
+                            <Route exact path='/TODOs' element={<TODOList TODOs={this.state.TODOs}
+                                                                          delete_TODO={(uid) => this.delete_TODO(uid)}/>}/>
+                            <Route path="/TODOs/create" element={<TODOForm creatorKeep={this.state.users}
+                                                                           project={this.state.projects}
+                                                                           create_TODO={(body, creatorKeep, project) => this.create_TODO(body, creatorKeep, project)}/>}></Route>
+                            <Route path='/projects' element={<ProjectList projects={this.state.projects}
+                                                                          delete_project={(uid) => this.delete_project(uid)}/>}/>
                             <Route path='/projects/:id' element={<ProjectDetail projects={this.state.projects}/>}/>
+                            <Route exact path='/projects/create'
+                                   element={<ProjectForm creatorsProject={this.state.users}
+                                                         create_project={(name, creatorsProject, repository) => this.create_project(name, creatorsProject, repository)}/>}/>
                             <Route path="*" element={<NotFound404/>}/>
                         </Routes>
                     </main>
