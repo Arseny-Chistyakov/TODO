@@ -11,7 +11,10 @@ const TODOItem = ({TODO, delete_TODO}) => {
             <td>{TODO.created}</td>
             <td>{TODO.modified}</td>
             <td>{TODO.isActive ? 'Активна' : 'Закрыта'}</td>
-            <button className={"btn btn-secondary"} onClick={() => delete_TODO(TODO.uid)} type='button'>Удалить</button>
+            <td>
+                <button className={"btn btn-secondary"} onClick={() => delete_TODO(TODO.uid)} type='button'>Удалить
+                </button>
+            </td>
         </tr>
     )
 }
@@ -35,8 +38,8 @@ const TODOList = ({TODOs, delete_TODO}) => {
                 {Array.isArray(TODOs) ? TODOs.map((TODO) => <TODOItem TODO={TODO} delete_TODO={delete_TODO}/>) : null}
                 </tbody>
             </table>
-            <button className={"btn btn-secondary"}><Link className={"text-decoration-none text-white"}
-                                                          to="/TODOs/create">Создать заметку</Link></button>
+            <button className={"btn btn-secondary"}>
+                <Link to="/TODOs/create" className={"text-decoration-none text-white"}>Создать заметку</Link></button>
         </div>
     )
 }

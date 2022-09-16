@@ -47,7 +47,7 @@ const ProjectList = ({projects, delete_project}) => {
                     <Link to="/projects/create" className={"text-decoration-none text-white"}>Создать проект</Link>
                 </button>
                 <button type='button' className={"btn btn-secondary ml-5"}>
-                    <Link to={"/projects/update/"} className={"text-decoration-none text-white"}>Обновить</Link>
+                    <Link to={"/projects/update/"} className={"text-decoration-none text-white"}>Обновить проект</Link>
                 </button>
             </div>
             <table className="table table-hover mt-3">
