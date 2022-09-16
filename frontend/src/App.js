@@ -12,7 +12,8 @@ import Footer from "./components/Footer";
 import Navbar from "./components/Menu";
 import NotFound404 from "./components/NotFound404";
 import LoginForm from "./components/Auth";
-import ProjectForm from "./components/ProjectForm";
+import ProjectCreateForm from "./components/ProjectCreateForm";
+import ProjectUpdateForm from "./components/ProjectUpdateForm";
 import TODOForm from "./components/TODOForm";
 
 
@@ -43,6 +44,21 @@ class App extends React.Component {
         }).catch(error => {
             console.log(error)
             this.setState({projects: []})
+        })
+    }
+
+    update_project(uid, name, creatorsProject, repository) {
+        let headers = this.get_headers()
+        const data = {uid: uid, name: name, creatorsProject: creatorsProject, repository: repository}
+        console.log(data)
+        axios.put(`http://127.0.0.1:8000/api/projects/${uid}/`, data, {headers})
+            .then(response => {
+                this.load_data()
+            }).catch(error => {
+            console.log(error)
+            this.setState({
+                projects: []
+            })
         })
     }
 
@@ -167,8 +183,12 @@ class App extends React.Component {
                                                                           delete_project={(uid) => this.delete_project(uid)}/>}/>
                             <Route path='/projects/:id' element={<ProjectDetail projects={this.state.projects}/>}/>
                             <Route exact path='/projects/create'
-                                   element={<ProjectForm creatorsProject={this.state.users}
-                                                         create_project={(name, creatorsProject, repository) => this.create_project(name, creatorsProject, repository)}/>}/>
+                                   element={<ProjectCreateForm creatorsProject={this.state.users}
+                                                               create_project={(name, creatorsProject, repository) => this.create_project(name, creatorsProject, repository)}/>}/>
+                            <Route exact path='/projects/update/'
+                                   element={<ProjectUpdateForm creatorsProject={this.state.users}
+                                                               project={this.state.projects}
+                                                               update_project={(uid, name, creatorsProject, repository, project) => this.update_project(uid, name, creatorsProject, repository, project)}/>}/>
                             <Route path="*" element={<NotFound404/>}/>
                         </Routes>
                     </main>
