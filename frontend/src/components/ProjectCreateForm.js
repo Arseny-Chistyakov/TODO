@@ -28,6 +28,7 @@ class ProjectCreateForm extends React.Component {
 
     handleSubmit(event) {
         this.props.create_project(this.state.name, this.state.creatorsProject, this.state.repository)
+        window.location.href = '/projects';
         event.preventDefault()
     }
 

@@ -35,7 +35,8 @@ const TODOList = ({TODOs, delete_TODO}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {Array.isArray(TODOs) ? TODOs.map((TODO) => <TODOItem TODO={TODO} delete_TODO={delete_TODO}/>) : null}
+                {Array.isArray(TODOs) ? TODOs.map((TODO) => <TODOItem TODO={TODO} delete_TODO={delete_TODO}
+                                                                      key={TODO.uid}/>) : null}
                 </tbody>
             </table>
             <button className={"btn btn-secondary"}>

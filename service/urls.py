@@ -1,11 +1,10 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from graphene_django.views import GraphQLView
 from rest_framework import permissions
-from rest_framework.authtoken import views
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
@@ -31,8 +30,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls')),
-    # TokenAuthentication
-    path('api-token-auth/', views.obtain_auth_token),
     # JWTAuthentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
@@ -42,5 +39,7 @@ urlpatterns = [
     # GraphQL
     path('graphql/', GraphQLView.as_view(graphiql=True)),
     # Front production
-    path('', TemplateView.as_view(template_name='index.html'))
+    re_path(r'^.*/?$', TemplateView.as_view(template_name='index.html')),
+    # # TokenAuthentication
+    # path('api-token-auth/', views.obtain_auth_token),
 ]

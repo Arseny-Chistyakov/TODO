@@ -1,10 +1,30 @@
 import React from "react";
 
 class ProjectUpdateForm extends React.Component {
+    num = window.location.href
+    projectUid = this.num.replace(/\/$/, '').split('/').splice(-1, 1)[0];
 
     constructor(props) {
         super(props)
-        this.state = {uid: '', name: '', repository: '', creatorsProject: [], project: '',}
+        this.state = {uid: this.projectUid, name: '', repository: '', creatorsProject: []}
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (this.props !== nextProps) {
+            this.setState(nextProps);
+        }
+        let projectList = nextProps.project
+        let updateState
+        projectList.forEach((project) => {
+            if (project.uid === this.projectUid) {
+                return updateState = {
+                    'name': project.name,
+                    'repository': project.repository,
+                    'creatorsProject': project.creatorsProject
+                }
+            }
+        })
+        this.setState(updateState)
     }
 
     handleChange(event) {
@@ -28,7 +48,8 @@ class ProjectUpdateForm extends React.Component {
     }
 
     handleSubmit(event) {
-        this.props.update_project(this.state.uid, this.state.name, this.state.creatorsProject, this.state.repository, this.state.project)
+        this.props.update_project(this.state.uid, this.state.name, this.state.creatorsProject, this.state.repository)
+        window.location.href = '/projects';
         event.preventDefault()
     }
 
@@ -42,13 +63,6 @@ class ProjectUpdateForm extends React.Component {
                         </div>
                         <div className={"card-body"}>
                             <form onSubmit={(event) => this.handleSubmit(event)}>
-                                <div className={"form-group"}>
-                                    <label className={"mb-0 mt-1"}>Выберете проект, который хотите изменить</label>
-                                    <select className={"form-control"} name="uid"
-                                            onChange={(event) => this.handleChange(event)}>{this.props.project.map((item) =>
-                                        <option value={item.uid}>{item.name}</option>)}
-                                    </select>
-                                </div>
                                 <div className={"form-group"}>
                                     <label className={"mb-0"}>Измените название проекта</label>
                                     <input className={"form-control"} type="text" name="name"
@@ -70,6 +84,8 @@ class ProjectUpdateForm extends React.Component {
                                             value={item.uid}>{item.username}</option>)}
                                     </select>
                                 </div>
+                                <label className={"form-text text-muted"}>*перед изменением, следует обязательно
+                                    выбрать создателей</label>
                                 <input className={"btn btn-secondary mt-1"} type="submit" value="Изменить"/>
                             </form>
                         </div>

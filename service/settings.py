@@ -72,6 +72,7 @@ TEMPLATES = [
 ]
 
 STATIC_URL = '/static/'
+
 STATICFILES_DIRS = (BASE_DIR / 'frontend/build/static',)
 
 WSGI_APPLICATION = 'service.wsgi.application'
@@ -170,9 +171,7 @@ REST_FRAMEWORK = {
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
     ],
 
     'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.QueryParameterVersioning'

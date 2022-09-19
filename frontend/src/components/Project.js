@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Link, useParams} from "react-router-dom";
 
-const ProjectItem = ({project, delete_project}) => {
+const ProjectItem = ({project, delete_project, update_project}) => {
     return (
         <tr>
             <td><Link to={`${project.uid}`} className={"table-link"}>{project.name}</Link></td>
@@ -10,6 +10,12 @@ const ProjectItem = ({project, delete_project}) => {
             <td>
                 <button onClick={() => delete_project(project.uid)} type='button' className={"btn btn-secondary"}>
                     Удалить
+                </button>
+            </td>
+            <td>
+                <button type='button' className={"btn btn-secondary"}>
+                    <Link onClick={() => update_project(project.uid)} to={`update/${project.uid}`}
+                          className={"text-decoration-none text-white"}>Обновить</Link>
                 </button>
             </td>
         </tr>
@@ -46,9 +52,6 @@ const ProjectList = ({projects, delete_project}) => {
                 <button className={"btn btn-secondary ml-5"}>
                     <Link to="/projects/create" className={"text-decoration-none text-white"}>Создать проект</Link>
                 </button>
-                <button type='button' className={"btn btn-secondary ml-5"}>
-                    <Link to={"/projects/update/"} className={"text-decoration-none text-white"}>Обновить проект</Link>
-                </button>
             </div>
             <table className="table table-hover mt-3">
                 <thead>
@@ -57,11 +60,13 @@ const ProjectList = ({projects, delete_project}) => {
                     <th>Репозитории</th>
                     <th>Создатели проекта</th>
                     <th></th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 {Array.isArray(filteredData) ? filteredData.map((project) => <ProjectItem project={project}
-                                                                                          delete_project={delete_project}/>) : null}
+                                                                                          delete_project={delete_project}
+                                                                                          key={project.uid}/>) : null}
                 </tbody>
             </table>
         </div>
@@ -79,16 +84,16 @@ const ProjectDetail = ({projects}) => {
                 <div className={"card shadow-lg border-0 rounded-lg mt-5"}>
                     <div className="card-header">
                         <h3 className="text-center my-2">
-                            <em>Название проекта:</em> {filteredProject.name}</h3>
+                            Название проекта: {filteredProject.name}</h3>
                     </div>
                     <div className={"card-body text-left"}>
-                        <p className="card-text "><em>Ссылка на проект:</em>
+                        <p className="card-text ">Ссылка на проект:
                             <a className={"table-link"} href={filteredProject.repository}>
                                 {filteredProject.repository}</a>
                         </p>
                         <div className={"form-group"}>
-                            <label className={"mb-0 card-text text-decoration-underline"}><em>Список
-                                разработчиков проекта:</em></label>
+                            <label className={"mb-2 card-text text-decoration-underline"}>Список разработчиков
+                                проекта:</label>
                             {filteredProject.creatorsProject.map((creatorsProject, index) => {
                                 return (
                                     <p className="card-text">{index + 1}. {creatorsProject} </p>)

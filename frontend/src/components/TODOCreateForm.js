@@ -1,6 +1,6 @@
 import React from "react";
 
-class TODOForm extends React.Component {
+class TODOCreateForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {body: '', creatorKeep: '', project: ''}
@@ -16,6 +16,7 @@ class TODOForm extends React.Component {
 
     handleSubmit(event) {
         this.props.create_TODO(this.state.body, this.state.creatorKeep, this.state.project)
+        window.location.href = '/TODOs';
         event.preventDefault()
     }
 
@@ -62,4 +63,4 @@ class TODOForm extends React.Component {
     }
 }
 
-export default TODOForm
+export default TODOCreateForm

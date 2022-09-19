@@ -14,7 +14,7 @@ import NotFound404 from "./components/NotFound404";
 import LoginForm from "./components/Auth";
 import ProjectCreateForm from "./components/ProjectCreateForm";
 import ProjectUpdateForm from "./components/ProjectUpdateForm";
-import TODOForm from "./components/TODOForm";
+import TODOCreateForm from "./components/TODOCreateForm";
 
 
 const DOMAIN = 'http://127.0.0.1:8000/api/'
@@ -39,7 +39,7 @@ class App extends React.Component {
     create_project(name, creatorsProject, repository) {
         let headers = this.get_headers()
         const data = {name: name, creatorsProject: creatorsProject, repository: repository}
-        axios.post(`http://127.0.0.1:8000/api/projects/`, data, {headers}).then(response => {
+        axios.post(get_url(`projects/`), data, {headers}).then(response => {
             this.load_data()
         }).catch(error => {
             console.log(error)
@@ -51,7 +51,7 @@ class App extends React.Component {
         let headers = this.get_headers()
         const data = {uid: uid, name: name, creatorsProject: creatorsProject, repository: repository}
         console.log(data)
-        axios.put(`http://127.0.0.1:8000/api/projects/${uid}/`, data, {headers})
+        axios.put(get_url(`projects/${uid}/`), data, {headers})
             .then(response => {
                 this.load_data()
             }).catch(error => {
@@ -62,20 +62,9 @@ class App extends React.Component {
         })
     }
 
-    create_TODO(body, creatorKeep, project) {
-        const headers = this.get_headers()
-        const data = {body: body, creatorKeep: creatorKeep, project: project}
-        axios.post(`http://127.0.0.1:8000/api/TODOs/`, data, {headers}).then(response => {
-            this.load_data()
-        }).catch(error => {
-            console.log(error)
-            this.setState({TODOs: []})
-        })
-    }
-
     delete_project(uid) {
         let headers = this.get_headers()
-        axios.delete(`http://127.0.0.1:8000/api/projects/${uid}`, {headers}).then(response => {
+        axios.delete(get_url(`projects/${uid}/`), {headers}).then(response => {
             this.load_data()
         }).catch(error => {
             console.log(error)
@@ -83,9 +72,20 @@ class App extends React.Component {
         })
     }
 
+    create_TODO(body, creatorKeep, project) {
+        const headers = this.get_headers()
+        const data = {body: body, creatorKeep: creatorKeep, project: project}
+        axios.post(get_url(`TODOs/`), data, {headers}).then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({TODOs: []})
+        })
+    }
+
     delete_TODO(uid) {
         let headers = this.get_headers()
-        axios.delete(`http://127.0.0.1:8000/api/TODOs/${uid}`, {headers}).then(response => {
+        axios.delete(get_url(`TODOs/${uid}/`), {headers}).then(response => {
             this.load_data()
         }).catch(error => {
             console.log(error)
@@ -176,16 +176,17 @@ class App extends React.Component {
                             <Route exact path='/users' element={<UserList users={this.state.users}/>}/>
                             <Route exact path='/TODOs' element={<TODOList TODOs={this.state.TODOs}
                                                                           delete_TODO={(uid) => this.delete_TODO(uid)}/>}/>
-                            <Route path="/TODOs/create" element={<TODOForm creatorKeep={this.state.users}
-                                                                           project={this.state.projects}
-                                                                           create_TODO={(body, creatorKeep, project) => this.create_TODO(body, creatorKeep, project)}/>}></Route>
+                            <Route path="/TODOs/create" element={<TODOCreateForm creatorKeep={this.state.users}
+                                                                                 project={this.state.projects}
+                                                                                 create_TODO={(body, creatorKeep, project) => this.create_TODO(body, creatorKeep, project)}/>}></Route>
                             <Route path='/projects' element={<ProjectList projects={this.state.projects}
+                                                                          update_project={(uid) => this.update_project(uid)}
                                                                           delete_project={(uid) => this.delete_project(uid)}/>}/>
                             <Route path='/projects/:id' element={<ProjectDetail projects={this.state.projects}/>}/>
                             <Route exact path='/projects/create'
                                    element={<ProjectCreateForm creatorsProject={this.state.users}
                                                                create_project={(name, creatorsProject, repository) => this.create_project(name, creatorsProject, repository)}/>}/>
-                            <Route exact path='/projects/update/'
+                            <Route exact path='/projects/update/:uid'
                                    element={<ProjectUpdateForm creatorsProject={this.state.users}
                                                                project={this.state.projects}
                                                                update_project={(uid, name, creatorsProject, repository, project) => this.update_project(uid, name, creatorsProject, repository, project)}/>}/>
