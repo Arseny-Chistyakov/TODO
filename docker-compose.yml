@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:13.1
+    container_name: postgres_TODO
+    env_file:
+      - .docker_env
+    privileged: true
+    restart: always
+    environment:
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_DB: ${NAME}
+      POSTGRES_HOST: ${HOST}
+      POSTGRES_PORTS: ${PORT}
+
+  backend:
+    build:
+      context: .
+    env_file:
+      - .docker_env
+    ports:
+      - "8080:8080"
+    command: bash -c "
+      python manage.py migrate
+      && python manage.py create_users
+      && gunicorn service.wsgi -b 0.0.0.0:8080
+      "
+    container_name: backend_TODO
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "8000:80"
+    container_name: nginx_TODO
+    depends_on:
+      - backend
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "80:80"
+    container_name: frontend_TODO
+    depends_on:
+      - nginx
+

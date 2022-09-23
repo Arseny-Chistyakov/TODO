@@ -1,6 +1,7 @@
 .idea
 __pycache__/
 .venv
+.docker_env
 .env
 db.sqlite3
 example_requests_authorization.py
