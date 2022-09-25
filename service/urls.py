@@ -19,7 +19,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email='samson200289@mail.ru'),
         license=openapi.License(name='MIT License'), ),
     public=True,
-    permission_classes=[permissions.IsAdminUser], )
+    permission_classes=[permissions.IsAuthenticatedOrReadOnly], )
 
 router = DefaultRouter()
 router.register('users', CustomUserViewSet, basename='users')
