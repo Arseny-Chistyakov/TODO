@@ -8,9 +8,9 @@
 
 - Для backend использовать `Django Rest Framework`</br>
 - Для frontend использовать `React.js`</br>
-- Авторизация должна происходит с помощью JWT token</br>
+- Авторизация должна происходит с помощью `JWT token`</br>
 - Написать тесты для API</br>
-- Завернуть всё в контейнер`Docker(Docker-compose)`
+- Завернуть всё в контейнер `Docker(Docker-compose)`
 
 ### ***Объект User***
 
