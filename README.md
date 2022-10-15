@@ -81,10 +81,18 @@ https://github.com/Arseny-Chistyakov/TODO.git
 python -m venv venv
 ```
 
-Активировать виртуальное окружение
+Активировать виртуальное окружение<br>
+
+Linux/MacOS:
 
 ```
-venv\Scripts\activate.bat
+source venv/bin/activate
+```
+
+Windows:
+
+```
+venv/Scripts/activate.bat     
 ```
 
 Установить зависимости
